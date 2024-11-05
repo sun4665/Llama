@@ -6,8 +6,6 @@ from datasets import Dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM, Trainer, TrainingArguments, EarlyStoppingCallback, BitsAndBytesConfig
 from peft import LoraConfig, get_peft_model
 from bitsandbytes.optim import Adam8bit
-
-# 检查 GPU 是否可用，并设置设备
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {device}")
 
@@ -32,7 +30,7 @@ quantization_config = BitsAndBytesConfig(load_in_8bit=True)
 model = AutoModelForCausalLM.from_pretrained(
     model_path, 
     local_files_only=True, 
-    quantization_config=quantization_config  # 使用 BitsAndBytesConfig
+    quantization_config=quantization_config  
 )
 
 # 启用梯度检查点，减少显存占用
@@ -91,7 +89,7 @@ training_args = TrainingArguments(
     learning_rate=8e-6,
     per_device_train_batch_size=16,  
     num_train_epochs=5,
-    max_steps=800, #迭代次数 
+    max_steps=2400, #迭代次数 
     gradient_accumulation_steps=16,  
     logging_dir="./logs",
     logging_steps=20,
